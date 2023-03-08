@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <title>PQS Tractor Display</title>
+  </head>
+<body style="background-color: #FFFFFF; font-family: Algerian; font-size: 40px;">
+  <div id="rpmDiv" style="position:absolute;left:0px;height:150px;width:150px;border:solid; text-align: center; background-color: rgb(0,0,0); color:#CEB888;" onclick="buttonPressed('rpm');">Engine RPM: <span id="rpmDisp">1234</span></div>
+  <div id="clutchDiv" style="position:absolute;left:160px;height:150px;width:150px;border:solid;overflow-wrap:break-word; font-size: 30px;text-align: center; background-color: rgb(0,0,0); color:#CEB888;" onclick="buttonPressed('clutch');">Clutch Engagement <span id="clutchDisp">75</span>%</div>
+  <div id="groundDiv" onclick="buttonPressed('gnd');" style="position:absolute;left:320px;height:150px;width:150px;border:solid;text-align: center; background-color: rgb(0,0,0); color:#CEB888;">Ground Speed: <span id="gndDisp">3.9</span></div>
+  <div id="tempDiv" onclick="buttonPressed('temp');" style="position:absolute;left:480px;height:150px;width:150px;border:solid;text-align: center; background-color: rgb(0,0,0); color:#CEB888;">Engine Temp: <span id="tempDisp">100</span>F</div>
+
+
+   
+    <img src="home.png" style="position:absolute; right:0px; width:150px;height:150px;"  onclick="buttonPressed('home');">
+   <img id="rightButton" src="left.png" style="position:absolute; right:150px; width:150px;height:150px; -webkit-transform: scaleX(-1); transform: scaleX(-1);" onclick="buttonPressed('right');">
+    <img id="leftButton" src="left.png" style="position:absolute; right:300px; width:150px;height:150px;"  onclick="buttonPressed('left');">
+
+
+  <div id="GearDiv" style="position:absolute; left:calc(50% - 250px); top:calc(50% - 150px); text-align: center; width:500px; height:300px; font-size: 100px; color:#CEB888;">Forward</div>
+
+
+  <div id="serviceDiv" onclick="location.href = 'service.html'" style="position:absolute;left:0px; bottom:0; height:150px;width:150px;border:solid; text-align: center; background-color: rgb(0,0,0); font-size: 35px; color:#CEB888;"
+  >
+  Service Interval
+  </div>
+
+  <div id="alertDiv" style="position:absolute;left:5%; top:5%; width:90%; height:90%; border:solid; background-color: rgb(255,255,0); visibility: hidden;">
+  <img src="warning.png" style="position:absolute; left:calc(50% - 75px); top:30%; width:150px;height:150px;">
+  <div style="position:absolute;top:50%; left:calc(50% - 200px); width:400px; font-size: 100px; text-align: center;">
+    Warning
+  </div>
+  <div style="position:absolute;top:65%; left:10%; width:80%; font-size: 50px; text-align: center; border:solid;">
+    TRACTOR ENGINE TEMP HIGH
+  </div>
+
+  <div onclick="changeAlert();" style="position:absolute;top:calc(65% + 80px); left:calc(50% - 200px); width:400px; font-size: 50px; text-align: center; border:solid;">
+    OK
+  </div>
+
+  </div>
+
+  <div id="devTools" style="position:absolute;right:0; bottom:0; background-color:#CEB888; font-size: 30px; border:solid;">
+  Developer tools:<br>
+  engine rpm <input id="rpmInput" type="number" value=1234 style="font-size:30px; width:150px;" onchange="updateVals();"><br>
+  clutch engage. <input id="clutchInput" type="number" value=75 style="font-size:30px; width:150px;" onchange="updateVals();"><br>
+  ground speed <input id="gndInput" type="number" value=3.9 style="font-size:30px; width:150px;" onchange="updateVals();"><br>
+  engine temp <input id="tempInput" type="number" value=100 style="font-size:30px; width:150px;" onchange="updateVals();"><br>
+  Gear num <select id="gearNum" style="font-size:30px; width:150px;" onchange="updateVals();">
+    <option value="Forward" selected>forward</option>
+    <option value="Reverse">reverse</option>
+    <option value="Neutral">neutral</option>
+  </select><br>
+  <input type="button" style="font-size:30px; width:170px;" value="Show alert" onclick="changeAlert()"><br>
+  <input type="button" style="font-size:30px; width:200px;" value="hide dev tools" onclick="document.getElementById('devTools').style.visibility='hidden';">
+</div>
+
+
+	
+ 
+  </body>
+</html>
+
+<script>
+
+  function updateVals(){
+    console.log("updating")
+    document.getElementById("rpmDisp").innerHTML = document.getElementById("rpmInput").value
+    document.getElementById("clutchDisp").innerHTML = document.getElementById("clutchInput").value
+    document.getElementById("gndDisp").innerHTML = document.getElementById("gndInput").value
+    document.getElementById("tempDisp").innerHTML = document.getElementById("tempInput").value
+    buttonPressed("none")
+  }
+
+textNum = 0
+alerting = false;
+
+function buttonPressed(buttonName){
+  console.log(buttonName)
+  texts = [document.getElementById("gearNum").value,
+            document.getElementById("rpmInput").value + " rpm", 
+            "Clutch Engagement:<br>" + document.getElementById("clutchInput").value + " %", 
+            document.getElementById("gndInput").value + " mph",
+            document.getElementById("tempInput").value + " F"]
+  if (buttonName == "left"){
+    textNum -= 1;
+  } else if (buttonName == "right"){
+    textNum += 1;
+  } else if (buttonName == "home"){
+    textNum = 0;
+  } else if (buttonName == "rpm"){
+    textNum = 1;
+  } else if (buttonName == "clutch"){
+    textNum = 2;
+  } else if (buttonName == "gnd"){
+    textNum = 3;
+  } else if (buttonName == "temp"){
+    textNum = 4;
+  }
+  
+  if (textNum < 0){
+    textNum = texts.length-1
+  } else if (textNum == texts.length){
+    textNum = 0;
+  }
+  if (buttonName=="home" || buttonName=="none" || buttonName == "left" || buttonName == "right"){
+    document.getElementById("rpmDiv").style.visibility="visible";
+    document.getElementById("clutchDiv").style.visibility="visible";
+    document.getElementById("groundDiv").style.visibility="visible";
+    document.getElementById("tempDiv").style.visibility="visible";
+    document.getElementById("serviceDiv").style.visibility="visible";
+    document.getElementById("rightButton").style.visibility="visible";
+    document.getElementById("leftButton").style.visibility="visible";
+  } else {
+    document.getElementById("rpmDiv").style.visibility="hidden";
+    document.getElementById("clutchDiv").style.visibility="hidden";
+    document.getElementById("groundDiv").style.visibility="hidden";
+    document.getElementById("tempDiv").style.visibility="hidden";
+    document.getElementById("serviceDiv").style.visibility="hidden";
+    document.getElementById("rightButton").style.visibility="hidden";
+    document.getElementById("leftButton").style.visibility="hidden";
+  }
+  document.getElementById("GearDiv").innerHTML = texts[textNum];
+
+}
+
+function changeAlert(){
+  let alert = document.getElementById("alertDiv")
+  if (alerting){
+    alert.style.visibility = "hidden";
+    alerting = false
+  } else{
+    alert.style.visibility = "visible";
+    alerting = true;
+  }
+}
+
+</script>
