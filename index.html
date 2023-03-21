@@ -3,7 +3,7 @@
   <head>
    <title>PQS Tractor Display</title>
   </head>
-<body style="background-color: #FFFFFF; font-family: Algerian; font-size: 40px;">
+<body style="background-color: rgb(0,255,0); font-family: sans-serif; font-size: 40px;">
   <div id="rpmDiv" style="position:absolute;left:0px;height:150px;width:150px;border:solid; text-align: center; background-color: rgb(0,0,0); color:#CEB888;" onclick="buttonPressed('rpm');">Engine RPM: <span id="rpmDisp">1234</span></div>
   <div id="clutchDiv" style="position:absolute;left:160px;height:150px;width:150px;border:solid;overflow-wrap:break-word; font-size: 30px;text-align: center; background-color: rgb(0,0,0); color:#CEB888;" onclick="buttonPressed('clutch');">Clutch Engagement <span id="clutchDisp">75</span>%</div>
   <div id="groundDiv" onclick="buttonPressed('gnd');" style="position:absolute;left:320px;height:150px;width:150px;border:solid;text-align: center; background-color: rgb(0,0,0); color:#CEB888;">Ground Speed: <span id="gndDisp">3.9</span></div>
@@ -16,7 +16,7 @@
     <img id="leftButton" src="left.png" style="position:absolute; right:300px; width:150px;height:150px;"  onclick="buttonPressed('left');">
 
 
-  <div id="GearDiv" style="position:absolute; left:calc(50% - 250px); top:calc(50% - 150px); text-align: center; width:500px; height:300px; font-size: 100px; color:#CEB888;">Forward</div>
+  <div id="GearDiv" style="position:absolute; left:calc(50% - 250px); top:calc(50% - 150px); text-align: center; width:500px; height:300px; font-size: 100px; color:#CEB888;">3.9 MPH</div>
 
 
   <div id="serviceDiv" onclick="location.href = 'service.html'" style="position:absolute;left:0px; bottom:0; height:150px;width:150px;border:solid; text-align: center; background-color: rgb(0,0,0); font-size: 35px; color:#CEB888;"
@@ -69,6 +69,14 @@
     document.getElementById("gndDisp").innerHTML = document.getElementById("gndInput").value
     document.getElementById("tempDisp").innerHTML = document.getElementById("tempInput").value
     buttonPressed("none")
+
+    if (document.getElementById("gndInput").value >= 5){
+      document.body.style.backgroundColor = "red"
+    } else if (document.getElementById("gndInput").value > 4.5){
+      document.body.style.backgroundColor = "red"
+    } else {
+      document.body.style.backgroundColor = "rgb(0,255,0)"
+    }
   }
 
 textNum = 0
@@ -86,7 +94,7 @@ function buttonPressed(buttonName){
   } else if (buttonName == "right"){
     textNum += 1;
   } else if (buttonName == "home"){
-    textNum = 0;
+    textNum = 3;
   } else if (buttonName == "rpm"){
     textNum = 1;
   } else if (buttonName == "clutch"){
@@ -134,4 +142,4 @@ function changeAlert(){
   }
 }
 
-</script>
+</script
