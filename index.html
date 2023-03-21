@@ -73,13 +73,13 @@
     if (document.getElementById("gndInput").value >= 5){
       document.body.style.backgroundColor = "red"
     } else if (document.getElementById("gndInput").value > 4.5){
-      document.body.style.backgroundColor = "red"
+      document.body.style.backgroundColor = "yellow"
     } else {
       document.body.style.backgroundColor = "rgb(0,255,0)"
     }
   }
 
-textNum = 0
+textNum = 3
 alerting = false;
 
 function buttonPressed(buttonName){
@@ -105,10 +105,10 @@ function buttonPressed(buttonName){
     textNum = 4;
   }
   
-  if (textNum < 0){
+  if (textNum < 1){
     textNum = texts.length-1
   } else if (textNum == texts.length){
-    textNum = 0;
+    textNum = 1;
   }
   if (buttonName=="home" || buttonName=="none" || buttonName == "left" || buttonName == "right"){
     document.getElementById("rpmDiv").style.visibility="visible";
