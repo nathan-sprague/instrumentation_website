@@ -4,23 +4,23 @@
    <title>PQS Tractor Display</title>
   </head>
 <body style="background-color: rgb(0,255,0); font-family: sans-serif; font-size: 40px;">
-  <div id="rpmDiv" style="position:absolute;left:0px;height:150px;width:150px;border:solid; text-align: center; background-color: rgb(0,0,0); color:#CEB888;" onclick="buttonPressed('rpm');">Engine RPM: <span id="rpmDisp">1234</span></div>
-  <div id="clutchDiv" style="position:absolute;left:160px;height:150px;width:150px;border:solid;overflow-wrap:break-word; font-size: 30px;text-align: center; background-color: rgb(0,0,0); color:#CEB888;" onclick="buttonPressed('clutch');">Clutch Engagement <span id="clutchDisp">75</span>%</div>
-  <div id="groundDiv" onclick="buttonPressed('gnd');" style="position:absolute;left:320px;height:150px;width:150px;border:solid;text-align: center; background-color: rgb(0,0,0); color:#CEB888;">Ground Speed: <span id="gndDisp">3.9</span></div>
-  <div id="tempDiv" onclick="buttonPressed('temp');" style="position:absolute;left:480px;height:150px;width:150px;border:solid;text-align: center; background-color: rgb(0,0,0); color:#CEB888;">Engine Temp: <span id="tempDisp">100</span>F</div>
+  <div id="rpmDiv" style="position:absolute;left:0px;height:150px;width:calc((100% - 450px)/4);border:solid; text-align: center; background-color: rgb(0,0,0); color:#CEB888;" onclick="buttonPressed('rpm');">Engine RPM: <span id="rpmDisp">1234</span></div>
+
+  <div id="clutchDiv" style="position:absolute;left:calc((100% - 450px) / 4);height:150px;width:calc((100% - 450px)/4);border:solid;overflow-wrap:break-word;text-align: center; background-color: rgb(0,0,0); color:#CEB888;" onclick="buttonPressed('clutch');">Clutch Engagement <span id="clutchDisp">75</span>%</div>
+  <div id="groundDiv" onclick="buttonPressed('gnd');" style="position:absolute;left:calc(2*(100% - 450px) / 4);;height:150px;width:calc((100% - 450px)/4);border:solid;text-align: center; background-color: rgb(0,0,0); color:#CEB888;">Ground Speed: <span id="gndDisp">3.9</span></div>
+  <div id="tempDiv" onclick="buttonPressed('temp');" style="position:absolute;left:calc(3*(100% - 450px) / 4);;height:150px; width:calc((100% - 450px) / 4);border:solid;text-align: center; background-color: rgb(0,0,0); color:#CEB888;">Engine Temp: <span id="tempDisp">100</span>F</div>
 
 
    
-    <img src="home.png" style="position:absolute; right:0px; width:150px;height:150px;"  onclick="buttonPressed('home');">
-   <img id="rightButton" src="left.png" style="position:absolute; right:150px; width:150px;height:150px; -webkit-transform: scaleX(-1); transform: scaleX(-1);" onclick="buttonPressed('right');">
-    <img id="leftButton" src="left.png" style="position:absolute; right:300px; width:150px;height:150px;"  onclick="buttonPressed('left');">
+  <img src="home.png" style="position:absolute; right:0px; width:150px;height:150px;"  onclick="buttonPressed('home');">
+  <img id="rightButton" src="left.png" style="position:absolute; right:150px; width:150px;height:150px; -webkit-transform: scaleX(-1); transform: scaleX(-1);" onclick="buttonPressed('right');">
+  <img id="leftButton" src="left.png" style="position:absolute; right:300px; width:150px;height:150px;"  onclick="buttonPressed('left');">
 
 
   <div id="GearDiv" style="position:absolute; left:calc(50% - 250px); top:calc(50% - 150px); text-align: center; width:500px; height:300px; font-size: 100px; color:#CEB888;">3.9 MPH</div>
 
 
-  <div id="serviceDiv" onclick="location.href = 'service.html'" style="position:absolute;left:0px; bottom:0; height:150px;width:150px;border:solid; text-align: center; background-color: rgb(0,0,0); font-size: 35px; color:#CEB888;"
-  >
+  <div id="serviceDiv" onclick="location.href = 'service.html'" style="position:absolute;left:0px; bottom:0; height:150px;width:150px;border:solid; text-align: center; background-color: rgb(0,0,0); font-size: 35px; color:#CEB888;"> 
   Service Interval
   </div>
 
@@ -39,7 +39,7 @@
 
   </div>
 
-  <div id="devTools" style="position:absolute;right:0; bottom:0; background-color:#CEB888; font-size: 30px; border:solid;">
+  <div id="devTools" style="position:absolute;right:0; bottom:0; background-color:#CEB888; font-size: 30px; border:solid; visibility: hidden;">
   Developer tools:<br>
   engine rpm <input id="rpmInput" type="number" value=1234 style="font-size:30px; width:150px;" onchange="updateVals();"><br>
   clutch engage. <input id="clutchInput" type="number" value=75 style="font-size:30px; width:150px;" onchange="updateVals();"><br>
@@ -70,39 +70,53 @@
     document.getElementById("tempDisp").innerHTML = document.getElementById("tempInput").value
     buttonPressed("none")
 
-    if (document.getElementById("gndInput").value >= 5){
-      document.body.style.backgroundColor = "red"
-    } else if (document.getElementById("gndInput").value > 4.5){
-      document.body.style.backgroundColor = "yellow"
-    } else {
-      document.body.style.backgroundColor = "rgb(0,255,0)"
+
+    if (!alerting && document.getElementById("tempInput").value>123 && textNum != 4){
+      changeAlert();
     }
+
+    
   }
 
 textNum = 3
 alerting = false;
+home = true;
+
+const queryString = window.location.search;
+const searchParams = new URLSearchParams(queryString);
+
+if (searchParams.has("dev")){
+  console.log(searchParams.get("dev"));
+  document.getElementById('devTools').style.visibility='visible';
+  
+}
 
 function buttonPressed(buttonName){
   console.log(buttonName)
   texts = [document.getElementById("gearNum").value,
             document.getElementById("rpmInput").value + " rpm", 
             "Clutch Engagement:<br>" + document.getElementById("clutchInput").value + " %", 
-            document.getElementById("gndInput").value + " mph",
+            document.getElementById("gndInput").value + " MPH",
             document.getElementById("tempInput").value + " F"]
   if (buttonName == "left"){
     textNum -= 1;
   } else if (buttonName == "right"){
     textNum += 1;
   } else if (buttonName == "home"){
+    home = true;
     textNum = 3;
   } else if (buttonName == "rpm"){
     textNum = 1;
+    home = false;
   } else if (buttonName == "clutch"){
     textNum = 2;
+    home = false;
   } else if (buttonName == "gnd"){
     textNum = 3;
+    home = false;
   } else if (buttonName == "temp"){
     textNum = 4;
+    home = false;
   }
   
   if (textNum < 1){
@@ -127,9 +141,46 @@ function buttonPressed(buttonName){
     document.getElementById("rightButton").style.visibility="hidden";
     document.getElementById("leftButton").style.visibility="hidden";
   }
+
   document.getElementById("GearDiv").innerHTML = texts[textNum];
 
+  if (textNum == 3){
+      if (document.getElementById("gndInput").value >= 5){
+        document.body.style.backgroundColor = "red"
+      } else if (document.getElementById("gndInput").value > 4.5){
+        document.body.style.backgroundColor = "yellow"
+      } else {
+        document.body.style.backgroundColor = "rgb(0,255,0)"
+      }
+    } else if (textNum == 2) { // clutch
+      if (document.getElementById("clutchInput").value >= 100){
+        document.body.style.backgroundColor = "rgb(0,255,0)"
+      } else if (document.getElementById("clutchInput").value >= 80){
+        document.body.style.backgroundColor = "yellow"
+      } else {
+        document.body.style.backgroundColor = "red"
+      }
+    } else if (textNum == 4) { // temp
+      if (document.getElementById("tempInput").value >= 123){
+        document.body.style.backgroundColor = "red"
+      } else {
+        document.body.style.backgroundColor = "rgb(0,255,0)"
+      }
+    } else {
+      document.body.style.backgroundColor = "rgb(255,255,255)"
+    }
 }
+
+document.body.addEventListener('keydown', function(event) {
+    // if (home){
+      const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+      if (key == "ArrowRight"){
+        buttonPressed("right");
+      } else if (key == "ArrowLeft"){
+        buttonPressed("left");
+      }
+    // }
+});
 
 function changeAlert(){
   let alert = document.getElementById("alertDiv")
@@ -137,7 +188,7 @@ function changeAlert(){
     alert.style.visibility = "hidden";
     alerting = false
   } else{
-    alert.style.visibility = "visible";
+    alert.style.visibility = "visible";127
     alerting = true;
   }
 }
